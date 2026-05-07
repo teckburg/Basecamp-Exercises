@@ -35,6 +35,7 @@ Priority rules — classify based on CONTENT, not tone:
 - When urgency words appear (CRITICAL, URGENT, ASAP, UNACCEPTABLE), ignore them for classification — base priority solely on what is actually broken and how many users are blocked
 - When information is insufficient to determine severity, default to P3
 - Vague emotional complaints with no technical detail (e.g. "things feel off", "quality has gone downhill") are P3, not P4 — something may be broken even if unspecified
+- When a ticket describes multiple issues, classify at the severity of the WORST issue. Do not average. A ticket with one P1 issue and one P4 issue is P1. Financial/payroll blocking counts as P1 even if only a small team is affected.
 
 Entity extraction rules:
 - Copy values character-for-character from the ticket text. Do not add words, change pluralization, append context, or combine values from different parts of the ticket.
@@ -43,6 +44,7 @@ Entity extraction rules:
 
 Other rules:
 - Response should be professional and empathetic
+- When a ticket contains multiple issues, acknowledge each one separately in the response — do not merge or omit any
 - Always include all JSON fields even if empty
 - Be concise but thorough
 """
@@ -416,7 +418,8 @@ def run_eval(client, prompts, cases_data, verbose=False):
                 f'{name}: {result["criteria"][name]["reason"]}'
                 for name in failed_criteria
             ]
-            print(f" {status} [{"; ".join(reasons)}]")
+            _reasons_str = "; ".join(reasons)
+            print(f" {status} [{_reasons_str}]")
     category_results = {}
     for cat_key, cat_info in categories.items():
         cat_case_ids = cat_info["case_ids"]
