@@ -36,6 +36,7 @@ Rules:
 - Response should be professional and empathetic
 - Always include all JSON fields even if empty
 - Be concise but thorough
+- ENTITIES: Only extract values that appear explicitly in the ticket. If a value is not stated, use null for strings and [] for arrays. Do not guess, infer, paraphrase, or invent values.
 """
 
 print("Broken prompt loaded. Run the eval suite (Cell 7) to see your baseline score.")
