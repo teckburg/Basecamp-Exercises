@@ -4,7 +4,8 @@
 # API Key Configuration
 import os
 ANTHROPIC_API_KEY = ""  # <-- Paste your API key here
-os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
+if ANTHROPIC_API_KEY:
+    os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
 
 # Verify connection
 import anthropic
