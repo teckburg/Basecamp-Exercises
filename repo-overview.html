@@ -3,742 +3,1762 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basecamp Exercises — Repository Overview</title>
+  <title>Basecamp Exercises — Anthropic Partner Training</title>
+  <meta name="description" content="A two-day AI engineering curriculum covering full-stack development, prompt engineering, evaluation methodology, inference optimization, and agentic system design powered by the Claude API." />
+  <meta property="og:title" content="Basecamp Exercises — Anthropic Partner Training" />
+  <meta property="og:description" content="Two days of hands-on AI engineering with Claude API, Vue 3, FastAPI, Jupyter, and more." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
   <style>
+    /* ─────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────── */
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #222536;
-      --border: #2e3148;
-      --accent: #7c6af7;
-      --accent2: #5eead4;
-      --accent3: #f97316;
-      --text: #e2e8f0;
-      --muted: #8b92a5;
-      --green: #4ade80;
-      --red: #f87171;
-      --yellow: #facc15;
+      /* Palette */
+      --c-bg:        #080a12;
+      --c-surface:   #0e1120;
+      --c-surface2:  #141828;
+      --c-surface3:  #1c2035;
+      --c-border:    rgba(255,255,255,0.07);
+      --c-border2:   rgba(255,255,255,0.12);
+
+      --c-violet:    #8b74ff;
+      --c-violet2:   #6c57e8;
+      --c-teal:      #2dd4bf;
+      --c-teal2:     #14b8a6;
+      --c-amber:     #f59e0b;
+      --c-rose:      #f43f5e;
+      --c-green:     #22c55e;
+
+      --c-text:      #f0f2f8;
+      --c-text2:     #a8b0c8;
+      --c-text3:     #5c6480;
+
+      /* Type scale (1.25 Major Third) */
+      --t-xs:   0.694rem;
+      --t-sm:   0.833rem;
+      --t-base: 1rem;
+      --t-md:   1.2rem;
+      --t-lg:   1.44rem;
+      --t-xl:   1.728rem;
+      --t-2xl:  2.074rem;
+      --t-3xl:  2.488rem;
+      --t-4xl:  2.986rem;
+      --t-5xl:  3.583rem;
+
+      /* Spacing (8px grid) */
+      --s1: 8px;  --s2: 16px; --s3: 24px;  --s4: 32px;
+      --s5: 40px; --s6: 48px; --s7: 64px;  --s8: 80px; --s9: 96px;
+
+      /* Radius */
+      --r-sm: 6px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
+
+      /* Shadows */
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.3);
+      --shadow-float: 0 20px 60px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4);
+      --shadow-glow-v: 0 0 40px rgba(139,116,255,0.15);
+      --shadow-glow-t: 0 0 40px rgba(45,212,191,0.12);
+
+      /* Transitions */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: var(--t-base);
+      line-height: 1.65;
+      overflow-x: hidden;
     }
 
-    a { color: var(--accent); text-decoration: none; }
+    ::selection { background: rgba(139,116,255,0.35); color: var(--c-text); }
+
+    a { color: var(--c-violet); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* ── Hero ── */
-    .hero {
-      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 60%, #1a1230 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 64px 24px 48px;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(124,106,247,0.15);
-      border: 1px solid rgba(124,106,247,0.35);
-      color: var(--accent);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .hero h1 {
-      font-size: clamp(28px, 5vw, 52px);
-      font-weight: 800;
-      background: linear-gradient(135deg, #e2e8f0 30%, var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 16px;
-    }
-    .hero p {
-      color: var(--muted);
-      font-size: 17px;
-      max-width: 620px;
-      margin: 0 auto 32px;
-    }
-    .hero-pills {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .pill {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .pill span { color: var(--text); font-weight: 600; }
+    img { display: block; max-width: 100%; }
 
-    /* ── Layout ── */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    .section {
-      padding: 56px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .section:last-child { border-bottom: none; }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .section-title {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .section-sub {
-      color: var(--muted);
-      margin-bottom: 36px;
-      max-width: 680px;
+    /* ─────────────────────────────────────────
+       NOISE TEXTURE
+    ───────────────────────────────────────── */
+    .noise::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
     }
 
-    /* ── Cards ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color .2s, transform .2s;
-    }
-    .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-    .card-icon {
-      font-size: 28px;
-      margin-bottom: 14px;
-    }
-    .card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .card-tag {
-      display: inline-block;
-      margin-top: 14px;
-      background: rgba(124,106,247,0.12);
-      border: 1px solid rgba(124,106,247,0.25);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 12px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-    .card-tag.green {
-      background: rgba(74,222,128,0.1);
-      border-color: rgba(74,222,128,0.25);
-      color: var(--green);
-    }
-    .card-tag.orange {
-      background: rgba(249,115,22,0.1);
-      border-color: rgba(249,115,22,0.25);
-      color: var(--accent3);
-    }
-    .card-tag.teal {
-      background: rgba(94,234,212,0.1);
-      border-color: rgba(94,234,212,0.25);
-      color: var(--accent2);
+    /* ─────────────────────────────────────────
+       SCROLL PROGRESS BAR
+    ───────────────────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--c-violet), var(--c-teal));
+      z-index: 1000;
+      transition: width 0.1s linear;
     }
 
-    /* ── Day sessions ── */
-    .day-block {
-      margin-bottom: 40px;
-    }
-    .day-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .day-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 4px 14px;
-      border-radius: 20px;
-      letter-spacing: .06em;
-      white-space: nowrap;
-    }
-    .day-badge.day2 { background: var(--accent2); color: #0f1117; }
-    .day-header h3 { font-size: 18px; font-weight: 700; }
-
-    .exercise-list {
-      display: grid;
-      gap: 14px;
-    }
-    .exercise {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: start;
-      gap: 18px;
-      transition: border-color .2s;
-    }
-    .exercise:hover { border-color: var(--accent); }
-    .exercise-num {
-      background: var(--surface2);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .exercise-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-    .exercise-body p { font-size: 13px; color: var(--muted); }
-    .exercise-type {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 10px;
-      white-space: nowrap;
-      align-self: flex-start;
-    }
-    .type-fullstack { background: rgba(124,106,247,0.15); color: var(--accent); }
-    .type-notebook  { background: rgba(94,234,212,0.12); color: var(--accent2); }
-    .type-analysis  { background: rgba(249,115,22,0.12); color: var(--accent3); }
-    .type-hackathon { background: rgba(250,204,21,0.12); color: var(--yellow); }
-
-    /* ── Tech stack ── */
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-    }
-    .tech-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 20px;
-    }
-    .tech-card h4 {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 12px;
-    }
-    .tech-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-    .tech-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .dot-purple { background: var(--accent); }
-    .dot-teal   { background: var(--accent2); }
-    .dot-orange { background: var(--accent3); }
-    .dot-green  { background: var(--green); }
-    .dot-yellow { background: var(--yellow); }
-
-    /* ── File tree ── */
-    .tree {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px 28px;
-      font-family: 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 13px;
-      line-height: 2;
-      overflow-x: auto;
-    }
-    .tree-dir  { color: var(--accent); font-weight: 600; }
-    .tree-file { color: var(--muted); }
-    .tree-note { color: var(--accent2); font-style: italic; font-size: 12px; }
-    .tree-indent { display: inline-block; width: 20px; }
-
-    /* ── Stat row ── */
-    .stat-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .stat-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 28px;
-      text-align: center;
-      flex: 1;
-      min-width: 120px;
-    }
-    .stat-box .num {
-      font-size: 32px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .stat-box .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-    /* ── Setup steps ── */
-    .steps { display: grid; gap: 16px; }
-    .step {
-      display: flex;
-      gap: 18px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
-    }
-    .step-num {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .step h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-    .step p  { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
-    .code-block {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-family: monospace;
-      font-size: 12px;
-      color: var(--accent2);
-      white-space: pre;
-      overflow-x: auto;
-    }
-
-    /* ── Footer ── */
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 28px 24px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    footer strong { color: var(--text); }
-
-    /* ── Nav ── */
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(15,17,23,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--s3);
+      background: rgba(8,10,18,0);
+      transition: background 0.3s var(--ease-out), border-color 0.3s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(8,10,18,0.85);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-color: var(--c-border);
     }
     .nav-inner {
-      max-width: 1100px;
+      max-width: 1160px;
+      width: 100%;
       margin: 0 auto;
       display: flex;
       align-items: center;
       gap: 0;
-      height: 52px;
-      overflow-x: auto;
     }
     .nav-logo {
-      font-weight: 800;
-      font-size: 15px;
-      color: var(--text);
-      white-space: nowrap;
-      margin-right: 32px;
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-inner a {
-      font-size: 13px;
-      color: var(--muted);
-      padding: 0 14px;
-      height: 52px;
+      font-size: var(--t-sm);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--c-text);
+      margin-right: var(--s5);
       display: flex;
       align-items: center;
+      gap: 10px;
       white-space: nowrap;
-      transition: color .15s;
-      border-bottom: 2px solid transparent;
     }
-    .nav-inner a:hover {
-      color: var(--text);
+    .nav-logo-mark {
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, var(--c-violet), var(--c-teal));
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      margin-left: auto;
+    }
+    .nav-links a {
+      font-size: var(--t-sm);
+      font-weight: 500;
+      color: var(--c-text3);
+      padding: 0 var(--s2);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--c-text);
       text-decoration: none;
-      border-bottom-color: var(--accent);
+      border-bottom-color: var(--c-violet);
     }
 
-    @media (max-width: 640px) {
-      .exercise { grid-template-columns: auto 1fr; }
-      .exercise-type { grid-column: 2; }
+    /* ─────────────────────────────────────────
+       LAYOUT HELPERS
+    ───────────────────────────────────────── */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 var(--s3);
+    }
+    .section {
+      padding: var(--s9) 0;
+      position: relative;
+    }
+    .section-label {
+      font-size: var(--t-xs);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--c-violet);
+      margin-bottom: var(--s1);
+    }
+    .section-title {
+      font-size: clamp(var(--t-xl), 3vw, var(--t-3xl));
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: var(--s2);
+    }
+    .section-sub {
+      font-size: var(--t-md);
+      color: var(--c-text2);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: var(--s7);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      padding: 120px var(--s3) var(--s8);
+    }
+
+    /* Aurora background */
+    .hero-aurora {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .aurora-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .aurora-blob:nth-child(1) {
+      width: 700px; height: 700px;
+      background: var(--c-violet2);
+      top: -200px; left: -100px;
+      animation-duration: 14s;
+    }
+    .aurora-blob:nth-child(2) {
+      width: 600px; height: 600px;
+      background: var(--c-teal2);
+      top: 0; right: -150px;
+      animation-duration: 18s;
+      animation-delay: -6s;
+    }
+    .aurora-blob:nth-child(3) {
+      width: 500px; height: 500px;
+      background: var(--c-violet);
+      bottom: -150px; left: 30%;
+      animation-duration: 16s;
+      animation-delay: -3s;
+      opacity: 0.1;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+
+    /* Noise on hero */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Grid lines */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 20%, black 30%, transparent 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1160px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s7);
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s1);
+      background: rgba(139,116,255,0.1);
+      border: 1px solid rgba(139,116,255,0.25);
+      color: var(--c-violet);
+      padding: 5px 14px;
+      border-radius: 40px;
+      font-size: var(--t-xs);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--s3);
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--c-violet);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .hero h1 {
+      font-size: clamp(var(--t-2xl), 5vw, var(--t-5xl));
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: var(--s3);
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, #fff 0%, var(--c-violet) 60%, var(--c-teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: var(--t-md);
+      color: var(--c-text2);
+      line-height: 1.75;
+      margin-bottom: var(--s5);
+      max-width: 520px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s2);
+      margin-bottom: var(--s6);
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s1);
+      background: linear-gradient(135deg, var(--c-violet), var(--c-violet2));
+      color: #fff;
+      font-size: var(--t-sm);
+      font-weight: 600;
+      padding: 11px 24px;
+      border-radius: var(--r-md);
+      transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(139,116,255,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(139,116,255,0.5);
+      text-decoration: none;
+      color: #fff;
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s1);
+      background: transparent;
+      color: var(--c-text2);
+      font-size: var(--t-sm);
+      font-weight: 500;
+      padding: 11px 24px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--c-border2);
+      transition: color 0.2s, border-color 0.2s, transform 0.2s var(--ease-out);
+    }
+    .btn-ghost:hover {
+      color: var(--c-text);
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    /* Stat pills */
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s2);
+    }
+    .hero-stat {
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: 12px 20px;
+      text-align: center;
+      min-width: 90px;
+    }
+    .hero-stat .num {
+      font-size: var(--t-xl);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--c-text), var(--c-violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    .hero-stat .lbl {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--c-text3);
+      margin-top: 3px;
+    }
+
+    /* Terminal mockup */
+    .terminal {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border2);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-float), var(--shadow-glow-v);
+      overflow: hidden;
+      position: relative;
+    }
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s1);
+      padding: 14px 18px;
+      background: var(--c-surface2);
+      border-bottom: 1px solid var(--c-border);
+    }
+    .terminal-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+    }
+    .td-r { background: #ff5f57; }
+    .td-y { background: #ffbd2e; }
+    .td-g { background: #28c840; }
+    .terminal-title {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--c-text3);
+      font-family: 'DM Mono', monospace;
+    }
+    .terminal-body {
+      padding: var(--s3);
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.9;
+      min-height: 280px;
+    }
+    .t-dim    { color: var(--c-text3); }
+    .t-violet { color: var(--c-violet); }
+    .t-teal   { color: var(--c-teal); }
+    .t-amber  { color: var(--c-amber); }
+    .t-green  { color: var(--c-green); }
+    .t-rose   { color: var(--c-rose); }
+    .t-white  { color: var(--c-text); }
+    .t-cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--c-violet);
+      vertical-align: text-bottom;
+      border-radius: 2px;
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ─────────────────────────────────────────
+       WAVE DIVIDER
+    ───────────────────────────────────────── */
+    .wave-divider {
+      width: 100%;
+      line-height: 0;
+      overflow: hidden;
+    }
+    .wave-divider svg { display: block; }
+
+    /* ─────────────────────────────────────────
+       STATS BAND
+    ───────────────────────────────────────── */
+    .stats-band {
+      background: var(--c-surface);
+      border-top: 1px solid var(--c-border);
+      border-bottom: 1px solid var(--c-border);
+      padding: var(--s5) 0;
+    }
+    .stats-band-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 var(--s3);
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: var(--s3);
+    }
+    .band-stat {
+      text-align: center;
+    }
+    .band-stat .num {
+      font-size: var(--t-3xl);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--c-text) 0%, var(--c-violet) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .band-stat .label {
+      font-size: var(--t-xs);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--c-text3);
+      margin-top: 6px;
+    }
+
+    /* ─────────────────────────────────────────
+       FEATURE CARDS (Overview)
+    ───────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s3);
+    }
+
+    .glass-card {
+      position: relative;
+      background: linear-gradient(145deg, var(--c-surface2) 0%, var(--c-surface) 100%);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s4);
+      transition: border-color 0.3s, transform 0.3s var(--ease-out), box-shadow 0.3s;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--r-lg);
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(139,116,255,0.0), rgba(139,116,255,0.0));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background 0.3s;
+      pointer-events: none;
+    }
+    .glass-card:hover {
+      border-color: rgba(139,116,255,0.35);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card), var(--shadow-glow-v);
+    }
+    .glass-card:hover::before {
+      background: linear-gradient(135deg, rgba(139,116,255,0.3), rgba(45,212,191,0.15));
+    }
+
+    .card-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: var(--s3);
+      position: relative;
+      z-index: 1;
+    }
+    .icon-violet { background: rgba(139,116,255,0.15); }
+    .icon-teal   { background: rgba(45,212,191,0.12); }
+    .icon-amber  { background: rgba(245,158,11,0.12); }
+    .icon-green  { background: rgba(34,197,94,0.12); }
+    .icon-rose   { background: rgba(244,63,94,0.12); }
+
+    .glass-card h3 {
+      font-size: var(--t-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s1);
+      position: relative; z-index: 1;
+    }
+    .glass-card p {
+      font-size: var(--t-sm);
+      color: var(--c-text2);
+      line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .card-footer {
+      margin-top: var(--s3);
+      padding-top: var(--s2);
+      border-top: 1px solid var(--c-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s1);
+      position: relative; z-index: 1;
+    }
+    .chip {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .chip-violet { background: rgba(139,116,255,0.15); color: var(--c-violet); }
+    .chip-teal   { background: rgba(45,212,191,0.12); color: var(--c-teal); }
+    .chip-amber  { background: rgba(245,158,11,0.12); color: var(--c-amber); }
+    .chip-green  { background: rgba(34,197,94,0.12); color: var(--c-green); }
+    .chip-rose   { background: rgba(244,63,94,0.12); color: var(--c-rose); }
+
+    /* ─────────────────────────────────────────
+       SESSIONS — BENTO GRID
+    ───────────────────────────────────────── */
+    .sessions-bg {
+      background: var(--c-surface);
+      border-top: 1px solid var(--c-border);
+      border-bottom: 1px solid var(--c-border);
+    }
+
+    .day-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s1);
+      font-size: var(--t-xs);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: var(--s4);
+    }
+    .day1-label { background: rgba(139,116,255,0.15); color: var(--c-violet); }
+    .day2-label { background: rgba(45,212,191,0.12); color: var(--c-teal); }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(180px, auto);
+      gap: var(--s2);
+      margin-bottom: var(--s7);
+    }
+
+    .bento-card {
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s4);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s var(--ease-out);
+    }
+    .bento-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+
+    /* Accent glow spot */
+    .bento-card::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      top: -60px; right: -60px;
+    }
+    .bento-card:hover::after { opacity: 0.12; }
+    .bento-glow-v::after { background: var(--c-violet); }
+    .bento-glow-t::after { background: var(--c-teal); }
+    .bento-glow-a::after { background: var(--c-amber); }
+
+    /* Featured large card */
+    .bento-card.featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .bento-card.wide { grid-column: span 2; }
+
+    .bento-num {
+      font-family: 'DM Mono', monospace;
+      font-size: var(--t-xs);
+      color: var(--c-text3);
+      margin-bottom: var(--s2);
+    }
+    .bento-card h3 {
+      font-size: var(--t-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s1);
+      line-height: 1.3;
+    }
+    .bento-card.featured h3 { font-size: var(--t-lg); }
+
+    .bento-card p {
+      font-size: var(--t-sm);
+      color: var(--c-text2);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .bento-type {
+      margin-top: var(--s3);
+      align-self: flex-start;
+    }
+
+    /* Decorative icon in featured */
+    .bento-deco {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      font-size: 100px;
+      opacity: 0.06;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ─────────────────────────────────────────
+       TECH STACK — SKILL BARS
+    ───────────────────────────────────────── */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s5);
+    }
+    .stack-col h3 {
+      font-size: var(--t-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s4);
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+    }
+    .stack-col h3 span {
+      font-size: 20px;
+    }
+
+    .skill-row {
+      margin-bottom: var(--s3);
+    }
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .skill-name {
+      font-size: var(--t-sm);
+      font-weight: 600;
+      color: var(--c-text);
+    }
+    .skill-pct {
+      font-size: var(--t-xs);
+      font-family: 'DM Mono', monospace;
+      color: var(--c-text3);
+    }
+    .skill-track {
+      height: 5px;
+      background: var(--c-surface3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .skill-bar {
+      height: 100%;
+      border-radius: 10px;
+      width: 0%;
+      transition: width 1.2s var(--ease-out);
+    }
+    .bar-violet { background: linear-gradient(90deg, var(--c-violet2), var(--c-violet)); }
+    .bar-teal   { background: linear-gradient(90deg, var(--c-teal2), var(--c-teal)); }
+    .bar-amber  { background: linear-gradient(90deg, #d97706, var(--c-amber)); }
+    .bar-green  { background: linear-gradient(90deg, #15803d, var(--c-green)); }
+
+    /* Tech tag cloud */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s1);
+      margin-top: var(--s3);
+    }
+    .tech-tag {
+      background: var(--c-surface3);
+      border: 1px solid var(--c-border);
+      color: var(--c-text2);
+      font-size: var(--t-xs);
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: var(--r-sm);
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+    .tech-tag:hover {
+      color: var(--c-text);
+      border-color: var(--c-border2);
+      background: var(--c-surface2);
+    }
+
+    /* ─────────────────────────────────────────
+       CURRICULUM RADAR CHART
+    ───────────────────────────────────────── */
+    .chart-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s7);
+      align-items: center;
+    }
+    .chart-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chart-wrap svg { max-width: 360px; width: 100%; }
+    .chart-info h3 {
+      font-size: var(--t-xl);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--s2);
+    }
+    .chart-info p {
+      font-size: var(--t-sm);
+      color: var(--c-text2);
+      line-height: 1.75;
+      margin-bottom: var(--s4);
+    }
+    .topic-list { list-style: none; display: grid; gap: var(--s2); }
+    .topic-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+      font-size: var(--t-sm);
+      color: var(--c-text2);
+    }
+    .topic-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       FILE TREE
+    ───────────────────────────────────────── */
+    .tree-wrap {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .tree-titlebar {
+      display: flex;
+      align-items: center;
+      gap: var(--s1);
+      padding: 14px 20px;
+      background: var(--c-surface2);
+      border-bottom: 1px solid var(--c-border);
+    }
+    .tree-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .tree-name {
+      margin-left: 10px;
+      font-size: var(--t-xs);
+      font-family: 'DM Mono', monospace;
+      color: var(--c-text3);
+    }
+    .tree-body {
+      padding: var(--s4) var(--s4);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 2;
+      overflow-x: auto;
+    }
+    .tr { display: flex; align-items: baseline; gap: 8px; }
+    .tr-dir  { color: var(--c-violet); font-weight: 600; }
+    .tr-file { color: var(--c-text2); }
+    .tr-note { color: var(--c-teal); font-size: 11px; opacity: 0.75; white-space: nowrap; }
+    .tr-indent { display: inline-block; }
+    .tr-line { color: var(--c-text3); }
+
+    /* ─────────────────────────────────────────
+       SETUP STEPS
+    ───────────────────────────────────────── */
+    .steps-grid { display: grid; gap: var(--s3); }
+    .step-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s4);
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: var(--s3);
+      align-items: start;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .step-card:hover {
+      border-color: rgba(139,116,255,0.25);
+      box-shadow: var(--shadow-glow-v);
+    }
+    .step-num {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--c-violet), var(--c-violet2));
+      color: #fff;
+      font-weight: 800;
+      font-size: var(--t-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(139,116,255,0.4);
+    }
+    .step-body h4 {
+      font-size: var(--t-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .step-body > p {
+      font-size: var(--t-sm);
+      color: var(--c-text2);
+      margin-bottom: var(--s2);
+      line-height: 1.65;
+    }
+    .code-block {
+      background: var(--c-bg);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s2) var(--s3);
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+      color: var(--c-teal);
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+    .cb-comment { color: var(--c-text3); }
+    .cb-cmd     { color: var(--c-text); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      background: var(--c-surface);
+      border-top: 1px solid var(--c-border);
+      padding: var(--s6) var(--s3);
+    }
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--s3);
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+      font-size: var(--t-sm);
+      font-weight: 700;
+      color: var(--c-text);
+    }
+    .footer-meta {
+      font-size: var(--t-xs);
+      color: var(--c-text3);
+    }
+    .footer-links {
+      display: flex;
+      gap: var(--s3);
+    }
+    .footer-links a {
+      font-size: var(--t-xs);
+      color: var(--c-text3);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--c-text); text-decoration: none; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; }
+      .terminal { display: none; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .bento-card.featured { grid-column: span 2; }
+      .stack-grid { grid-template-columns: 1fr; }
+      .chart-section { grid-template-columns: 1fr; }
+      .chart-wrap { order: 2; }
+    }
+    @media (max-width: 600px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .bento { grid-template-columns: 1fr; }
+      .bento-card.featured, .bento-card.wide { grid-column: span 1; }
+      .nav-links { display: none; }
+    }
+
+    /* ─────────────────────────────────────────
+       PRINT
+    ───────────────────────────────────────── */
+    @media print {
+      nav, #progress-bar, .hero-aurora, .hero-grid, .terminal { display: none !important; }
+      body { background: #fff; color: #111; font-size: 11pt; }
+      .hero { min-height: auto; padding: 32px 24px; background: #f8f9ff; }
+      .hero h1 .grad { -webkit-text-fill-color: #3b28cc; }
+      .section { padding: 32px 0; break-inside: avoid; }
+      .glass-card, .bento-card, .step-card, .tree-wrap { border: 1px solid #ddd; box-shadow: none; }
+      .glass-card, .bento-card { background: #fff; }
+      a { color: #3b28cc; }
+      .code-block { background: #f5f5f5; color: #0d7377; }
+      footer { background: #f8f9ff; color: #555; }
     }
   </style>
 </head>
 <body>
 
+<!-- Scroll progress -->
+<div id="progress-bar"></div>
+
 <!-- Nav -->
-<nav>
+<nav id="main-nav">
   <div class="nav-inner">
-    <div class="nav-logo">Basecamp<span>·</span>Exercises</div>
-    <a href="#overview">Overview</a>
-    <a href="#sessions">Sessions</a>
-    <a href="#stack">Tech Stack</a>
-    <a href="#structure">Structure</a>
-    <a href="#setup">Setup</a>
+    <div class="nav-logo">
+      <div class="nav-logo-mark">B</div>
+      Basecamp Exercises
+    </div>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#sessions">Sessions</a></li>
+      <li><a href="#curriculum">Curriculum</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#structure">Structure</a></li>
+      <li><a href="#setup">Setup</a></li>
+    </ul>
   </div>
 </nav>
 
-<!-- Hero -->
-<div class="hero">
-  <div class="hero-badge">Anthropic Partner Training</div>
-  <h1>Basecamp Exercises</h1>
-  <p>A two-day, hands-on AI engineering curriculum covering full-stack development, prompt debugging, evaluation methodology, inference optimization, and agentic system design — all powered by the Claude API.</p>
-  <div class="hero-pills">
-    <div class="pill"><span>8</span> Exercises</div>
-    <div class="pill"><span>2</span> Days</div>
-    <div class="pill"><span>103</span> Files</div>
-    <div class="pill"><span>Vue 3</span> + FastAPI</div>
-    <div class="pill"><span>Claude API</span> Integration</div>
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-aurora">
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+  </div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content container">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow">Anthropic Partner Training</div>
+      <h1>
+        <span class="grad">AI Engineering</span><br />
+        from Zero to Production
+      </h1>
+      <p class="hero-desc">
+        A two-day, hands-on curriculum covering full-stack development with Claude Code, prompt engineering, evaluation methodology, inference optimization, and production-grade agentic system design.
+      </p>
+      <div class="hero-cta">
+        <a href="#sessions" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Explore Sessions
+        </a>
+        <a href="#setup" class="btn-ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Quick Setup
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num" data-count="8">0</div>
+          <div class="lbl">Exercises</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num" data-count="2">0</div>
+          <div class="lbl">Days</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num" data-count="103">0</div>
+          <div class="lbl">Files</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num" data-count="7">0</div>
+          <div class="lbl">Notebooks</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal mockup -->
+    <div class="terminal reveal reveal-delay-2">
+      <div class="terminal-bar">
+        <div class="terminal-dot td-r"></div>
+        <div class="terminal-dot td-y"></div>
+        <div class="terminal-dot td-g"></div>
+        <span class="terminal-title">claude — Basecamp-Exercises</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-dim">$</span> <span class="t-violet">git</span> <span class="t-white">clone basecamp-exercises</span></div>
+        <div><span class="t-green">✓</span> <span class="t-dim">Cloned 103 files</span></div>
+        <br />
+        <div><span class="t-dim">$</span> <span class="t-violet">export</span> <span class="t-amber">ANTHROPIC_API_KEY</span>=<span class="t-teal">sk-ant-...</span></div>
+        <br />
+        <div><span class="t-dim">$</span> <span class="t-violet">cd</span> day1/01_inventory-management</div>
+        <div><span class="t-dim">$</span> ./scripts/start.sh</div>
+        <div><span class="t-green">▶</span> <span class="t-dim">Frontend  </span> <span class="t-teal">http://localhost:3000</span></div>
+        <div><span class="t-green">▶</span> <span class="t-dim">Backend   </span> <span class="t-teal">http://localhost:8001</span></div>
+        <br />
+        <div><span class="t-dim">$</span> <span class="t-violet">uv</span> <span class="t-white">run pytest backend/ -v</span></div>
+        <div><span class="t-green">PASSED</span> <span class="t-dim">tests/test_inventory.py</span></div>
+        <div><span class="t-green">PASSED</span> <span class="t-dim">tests/test_orders.py</span></div>
+        <div><span class="t-green">PASSED</span> <span class="t-dim">tests/test_api.py</span></div>
+        <div><span class="t-green">✓</span> <span class="t-dim">3 passed in 0.42s</span> <span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats band -->
+<div class="stats-band">
+  <div class="stats-band-inner">
+    <div class="band-stat reveal"><div class="num" data-count="8">0</div><div class="label">Exercises</div></div>
+    <div class="band-stat reveal reveal-delay-1"><div class="num" data-count="103">0</div><div class="label">Total Files</div></div>
+    <div class="band-stat reveal reveal-delay-2"><div class="num" data-count="36">0</div><div class="label">App Components</div></div>
+    <div class="band-stat reveal reveal-delay-3"><div class="num" data-count="7">0</div><div class="label">Notebooks</div></div>
+    <div class="band-stat reveal reveal-delay-4"><div class="num" data-count="3">0</div><div class="label">Custom Agents</div></div>
   </div>
 </div>
 
-<!-- Overview -->
-<div class="container section" id="overview">
-  <div class="section-label">Overview</div>
-  <div class="section-title">What is this repository?</div>
-  <p class="section-sub">Partner Basecamp is Anthropic's intensive training program for technical partners. This repo contains all workshop materials, demo applications, and guided exercises across two progressive days of AI engineering practice.</p>
+<!-- ═══════════════════════════════════════
+     OVERVIEW
+════════════════════════════════════════ -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="section-label">What's Inside</div>
+    <h2 class="section-title">Everything you need to build with Claude</h2>
+    <p class="section-sub">Partner Basecamp is Anthropic's intensive technical training program. This repository delivers all workshop materials, live demo applications, and guided exercises.</p>
 
-  <div class="stat-row">
-    <div class="stat-box"><div class="num">8</div><div class="label">Hands-on Exercises</div></div>
-    <div class="stat-box"><div class="num">2</div><div class="label">Training Days</div></div>
-    <div class="stat-box"><div class="num">103</div><div class="label">Total Files</div></div>
-    <div class="stat-box"><div class="num">4</div><div class="label">Languages Used</div></div>
-    <div class="stat-box"><div class="num">7</div><div class="label">Jupyter Notebooks</div></div>
+    <div class="feature-grid">
+      <div class="glass-card bento-glow-v reveal">
+        <div class="card-icon-wrap icon-violet">🏗️</div>
+        <h3>Production Demo App</h3>
+        <p>A full-stack Inventory Management System built with Vue 3 and FastAPI. Features dashboard KPIs, warehouse tracking, order management, demand forecasting, and spending analytics — all wired to a live API.</p>
+        <div class="card-footer">
+          <span class="chip chip-violet">Vue 3</span>
+          <span class="chip chip-violet">FastAPI</span>
+          <span class="chip chip-violet">36 Files</span>
+        </div>
+      </div>
+      <div class="glass-card bento-glow-t reveal reveal-delay-1">
+        <div class="card-icon-wrap icon-teal">📓</div>
+        <h3>Interactive Notebooks</h3>
+        <p>Seven Jupyter notebooks walk through Claude API integration, agentic tool-call loops, prompt evaluation harnesses, model benchmarking, and context-length engineering — executable cell by cell.</p>
+        <div class="card-footer">
+          <span class="chip chip-teal">Jupyter</span>
+          <span class="chip chip-teal">Claude API</span>
+          <span class="chip chip-teal">Codespaces</span>
+        </div>
+      </div>
+      <div class="glass-card bento-glow-a reveal reveal-delay-2">
+        <div class="card-icon-wrap icon-amber">🔬</div>
+        <h3>Evaluation & Benchmarking</h3>
+        <p>Purpose-built eval harnesses measure Claude quality and cost across Haiku, Sonnet, and Opus — covering TTFT, token throughput, prompt caching impact, and context-rot replication from Chroma's research.</p>
+        <div class="card-footer">
+          <span class="chip chip-amber">Haiku</span>
+          <span class="chip chip-amber">Sonnet</span>
+          <span class="chip chip-amber">Opus</span>
+        </div>
+      </div>
+      <div class="glass-card reveal reveal-delay-1">
+        <div class="card-icon-wrap icon-green">🤖</div>
+        <h3>Claude Code Integration</h3>
+        <p>Deep toolchain configuration — custom agents (vue-expert, code-reviewer, security-auditor), slash commands, post-tool-use hooks, MCP server config, and CLAUDE.md guidelines for both client and server.</p>
+        <div class="card-footer">
+          <span class="chip chip-green">MCP</span>
+          <span class="chip chip-green">Hooks</span>
+          <span class="chip chip-green">3 Agents</span>
+        </div>
+      </div>
+      <div class="glass-card reveal reveal-delay-2">
+        <div class="card-icon-wrap icon-rose">🧩</div>
+        <h3>Multi-Agent Diagnosis</h3>
+        <p>A no-code diagnostic exercise presenting a real 4-agent system (coordinator + 3 subagents) with tool schemas and execution traces. Students identify architecture flaws and recommend fixes from artifacts alone.</p>
+        <div class="card-footer">
+          <span class="chip chip-rose">Architecture</span>
+          <span class="chip chip-rose">Trace Analysis</span>
+        </div>
+      </div>
+      <div class="glass-card bento-glow-v reveal reveal-delay-3">
+        <div class="card-icon-wrap icon-violet">🏆</div>
+        <h3>Agent Hackathon</h3>
+        <p>Day 2 culminates in building a production-grade RFP response agent with knowledge-base retrieval, structured parsing, and automated report generation — with facilitator dry-run scripts and expected output.</p>
+        <div class="card-footer">
+          <span class="chip chip-violet">Agentic</span>
+          <span class="chip chip-violet">RAG</span>
+          <span class="chip chip-violet">Capstone</span>
+        </div>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="card-grid">
-    <div class="card">
-      <div class="card-icon">🏗️</div>
-      <h3>Full-Stack Demo App</h3>
-      <p>A production-quality Inventory Management System (Vue 3 + FastAPI) used as the Day 1 build-along foundation. Includes auth, filtering, charting, localization, and comprehensive tests.</p>
-      <span class="card-tag green">36 Files</span>
+<!-- ═══════════════════════════════════════
+     SESSIONS
+════════════════════════════════════════ -->
+<div class="sessions-bg" id="sessions">
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Curriculum</div>
+      <h2 class="section-title">Training Sessions</h2>
+      <p class="section-sub">Eight progressive exercises across two days, each targeting a distinct dimension of production AI engineering.</p>
+
+      <!-- Day 1 -->
+      <div class="day-label day1-label reveal">Day 1 — Foundation</div>
+      <div class="bento reveal">
+        <div class="bento-card featured bento-glow-v">
+          <div class="bento-num">01 / Day 1</div>
+          <h3>Inventory Management System</h3>
+          <p>The workshop's live canvas. A production-quality full-stack application used as the build-along foundation. Covers Vue 3 component authoring, FastAPI endpoint design, mock data architecture, a pytest suite, and end-to-end Claude Code workflows with custom agents, hooks, and MCP configuration.</p>
+          <div class="bento-type"><span class="chip chip-violet">Full-Stack App</span></div>
+          <div class="bento-deco">🏗️</div>
+        </div>
+        <div class="bento-card bento-glow-t">
+          <div class="bento-num">02 / Day 1</div>
+          <h3>Developer Platform</h3>
+          <p>Master raw Claude API usage — tool definitions, multi-turn conversations, and building a support-ticket triage agent with structured tool-call injection.</p>
+          <div class="bento-type"><span class="chip chip-teal">Notebook</span></div>
+        </div>
+        <div class="bento-card bento-glow-a">
+          <div class="bento-num">03 / Day 1</div>
+          <h3>Prompt Rescue</h3>
+          <p>Systematic prompt debugging. Receive failing prompts, diagnose root causes with an eval harness, apply fixes, and re-measure quality.</p>
+          <div class="bento-type"><span class="chip chip-amber">Notebook</span></div>
+        </div>
+        <div class="bento-card wide">
+          <div class="bento-num">04 / Day 1</div>
+          <h3>Diagnosing AI Problems</h3>
+          <p>No-code diagnostic exercise. Analyze a 4-agent architecture from a client brief, system prompts, tool schemas, and execution traces — identify failure modes and recommend redesigns without writing any code.</p>
+          <div class="bento-type"><span class="chip chip-rose">Analysis</span></div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-label day2-label reveal">Day 2 — Advanced</div>
+      <div class="bento reveal">
+        <div class="bento-card wide bento-glow-t">
+          <div class="bento-num">01 / Day 2</div>
+          <h3>Building Evals</h3>
+          <p>Define task sets, write graders (exact match, LLM-as-judge, regex), and build an eval harness that benchmarks Claude output quality for iterative improvement cycles.</p>
+          <div class="bento-type"><span class="chip chip-teal">Notebook</span></div>
+        </div>
+        <div class="bento-card bento-glow-v">
+          <div class="bento-num">02 / Day 2</div>
+          <h3>Inference Optimization</h3>
+          <p>Side-by-side benchmark Haiku, Sonnet, and Opus on TTFT, TTC, output tokens/sec, and cost. Measure prompt caching impact.</p>
+          <div class="bento-type"><span class="chip chip-violet">Notebook</span></div>
+        </div>
+        <div class="bento-card bento-glow-a">
+          <div class="bento-num">03 / Day 2</div>
+          <h3>Context Engineering</h3>
+          <p>Replicate Chroma's context-rot research with needle-in-haystack tests, Claude vs GPT-4.1 baselines, and mitigation strategies.</p>
+          <div class="bento-type"><span class="chip chip-amber">Notebook</span></div>
+        </div>
+        <div class="bento-card featured bento-glow-v">
+          <div class="bento-num">04 / Day 2</div>
+          <h3>Agent Build Hackathon</h3>
+          <p>Capstone challenge: design and implement a production-grade RFP parsing and response generation agent. Includes knowledge-base retrieval, structured document parsing, and automated report generation — with facilitator dry-run scripts and verified expected outputs.</p>
+          <div class="bento-type"><span class="chip chip-violet">Hackathon</span></div>
+          <div class="bento-deco">🏆</div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-icon">📓</div>
-      <h3>Interactive Notebooks</h3>
-      <p>Seven Jupyter notebooks teach Claude API integration, agentic loops, prompt evaluation, model benchmarking, and context-length engineering through executable, cell-by-cell exercises.</p>
-      <span class="card-tag teal">Jupyter / Codespaces</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🔬</div>
-      <h3>Evaluation & Benchmarking</h3>
-      <p>Purpose-built eval harnesses measure Claude model quality and cost across Haiku, Sonnet, and Opus — covering TTFT, token throughput, prompt caching, and context degradation research.</p>
-      <span class="card-tag orange">Research-Grade</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🤖</div>
-      <h3>Claude Code Integration</h3>
-      <p>Deep Claude Code configuration with custom agents (vue-expert, code-reviewer, security-auditor), slash commands, post-tool-use hooks, MCP server config, and skills.</p>
-      <span class="card-tag">MCP · Hooks · Agents</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🧩</div>
-      <h3>Multi-Agent Architecture</h3>
-      <p>Day 1 Exercise 4 presents a real 4-agent system (coordinator + 3 subagents) with tool schemas and execution traces for hands-on diagnosis without writing code.</p>
-      <span class="card-tag orange">No-Code Analysis</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🏆</div>
-      <h3>Agent Hackathon</h3>
-      <p>Day 2 culminates in building an RFP response agent with knowledge-base retrieval, structured parsing, and automated report generation — complete with facilitator dry-run scripts.</p>
-      <span class="card-tag green">Hackathon</span>
-    </div>
-  </div>
+  </section>
 </div>
 
-<!-- Sessions -->
-<div class="container section" id="sessions">
-  <div class="section-label">Curriculum</div>
-  <div class="section-title">Training Sessions</div>
-  <p class="section-sub">Eight progressive exercises, organized across two days. Each session builds on the previous and targets a distinct aspect of production AI engineering.</p>
+<!-- ═══════════════════════════════════════
+     CURRICULUM RADAR
+════════════════════════════════════════ -->
+<section class="section" id="curriculum">
+  <div class="container">
+    <div class="section-label">Coverage Map</div>
+    <h2 class="section-title">Topics by depth</h2>
+    <p class="section-sub">The curriculum is deliberately broad — giving engineers foundational competence across the entire Claude API surface area.</p>
 
-  <!-- Day 1 -->
-  <div class="day-block">
-    <div class="day-header">
-      <span class="day-badge">Day 1</span>
-      <h3>Foundation — Building with Claude</h3>
-    </div>
-    <div class="exercise-list">
-      <div class="exercise">
-        <div class="exercise-num">01</div>
-        <div class="exercise-body">
-          <h4>Inventory Management System</h4>
-          <p>Build-along workshop using a full-stack Vue 3 + FastAPI app as the live canvas. Covers component authoring, API design, mock data, tests, and Claude Code workflows including custom agents and hooks.</p>
-        </div>
-        <span class="exercise-type type-fullstack">Full-Stack</span>
+    <div class="chart-section">
+      <div class="chart-wrap reveal">
+        <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="radarFill" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#8b74ff" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.08"/>
+            </radialGradient>
+          </defs>
+          <g transform="translate(180,180)">
+            <!-- Grid circles -->
+            <circle r="140" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <circle r="112" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <circle r="84"  fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <circle r="56"  fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <circle r="28"  fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+            <!-- Axis lines (8 axes) -->
+            <line x1="0" y1="-140" x2="0" y2="140"   stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="-140" y1="0" x2="140" y2="0"    stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="-99" y1="-99" x2="99" y2="99"   stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="99" y1="-99" x2="-99" y2="99"   stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+            <!--
+              8 topics, angles from top going clockwise:
+              0:-90  1:-45  2:0   3:45  4:90  5:135  6:180  7:225 → deg
+              Values (0–140): API=126, Eval=112, Optim=98, Context=112, Agent=126, FullStack=140, Prompt=126, Claude=112
+
+              Points: angle offset by -90, r * cos/sin
+              (0 deg = top = -90 CSS deg)
+              Let r values:
+              0 = API Integration  → 126  → angle -90°  → (0, -126)
+              1 = Evaluation       → 112  → angle -45°  → (79.2, -79.2)
+              2 = Optimization     → 98   → angle   0°  → (98, 0)
+              3 = Context Eng.     → 112  → angle  45°  → (79.2, 79.2)
+              4 = Agentic Design   → 126  → angle  90°  → (0, 126)
+              5 = Full-Stack       → 140  → angle 135°  → (-98.99, 98.99)
+              6 = Prompt Eng.      → 126  → angle 180°  → (-126, 0)
+              7 = Claude Code      → 112  → angle 225°  → (-79.2, -79.2)
+            -->
+            <polygon
+              points="0,-126 79.2,-79.2 98,0 79.2,79.2 0,126 -98.99,98.99 -126,0 -79.2,-79.2"
+              fill="url(#radarFill)"
+              stroke="rgba(139,116,255,0.6)"
+              stroke-width="1.5"
+            />
+
+            <!-- Axis dots -->
+            <circle cx="0"     cy="-140" r="3" fill="#8b74ff"/>
+            <circle cx="98.99" cy="-98.99" r="3" fill="#8b74ff" opacity="0.6"/>
+            <circle cx="140"   cy="0"    r="3" fill="#8b74ff" opacity="0.6"/>
+            <circle cx="98.99" cy="98.99"  r="3" fill="#8b74ff" opacity="0.6"/>
+            <circle cx="0"     cy="140"  r="3" fill="#2dd4bf"/>
+            <circle cx="-98.99" cy="98.99" r="3" fill="#2dd4bf"/>
+            <circle cx="-140"  cy="0"    r="3" fill="#2dd4bf" opacity="0.6"/>
+            <circle cx="-98.99" cy="-98.99" r="3" fill="#2dd4bf" opacity="0.6"/>
+
+            <!-- Labels -->
+            <text x="0"   y="-152" text-anchor="middle" fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">API Integration</text>
+            <text x="110" y="-108" text-anchor="start"  fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Evaluation</text>
+            <text x="150" y="4"    text-anchor="start"  fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Optimization</text>
+            <text x="110" y="112"  text-anchor="start"  fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Context Eng.</text>
+            <text x="0"   y="162"  text-anchor="middle" fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Agentic Design</text>
+            <text x="-112" y="112" text-anchor="end"    fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Full-Stack</text>
+            <text x="-152" y="4"   text-anchor="end"    fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Prompt Eng.</text>
+            <text x="-112" y="-108" text-anchor="end"   fill="#a8b0c8" font-size="11" font-family="Inter,sans-serif">Claude Code</text>
+
+            <!-- Center dot -->
+            <circle cx="0" cy="0" r="4" fill="rgba(139,116,255,0.8)"/>
+          </g>
+        </svg>
       </div>
-      <div class="exercise">
-        <div class="exercise-num">02</div>
-        <div class="exercise-body">
-          <h4>Developer Platform — Agentic Loops</h4>
-          <p>Jupyter notebook that teaches raw Claude API usage: tool definitions, multi-turn conversations, and building a support-ticket triage agent with structured tool calls and result injection.</p>
-        </div>
-        <span class="exercise-type type-notebook">Notebook</span>
-      </div>
-      <div class="exercise">
-        <div class="exercise-num">03</div>
-        <div class="exercise-body">
-          <h4>Prompt Rescue — Debugging & Evaluation</h4>
-          <p>Systematic prompt debugging workflow. Students receive real failing prompts, diagnose root causes using an eval harness, apply fixes, and re-measure output quality with before/after comparisons.</p>
-        </div>
-        <span class="exercise-type type-notebook">Notebook</span>
-      </div>
-      <div class="exercise">
-        <div class="exercise-num">04</div>
-        <div class="exercise-body">
-          <h4>Diagnosing AI Problems — Multi-Agent Analysis</h4>
-          <p>No-code diagnostic exercise. Students receive a client email, 4-agent system prompts, tool schemas, and execution traces — then identify architecture flaws and recommend fixes without running any code.</p>
-        </div>
-        <span class="exercise-type type-analysis">Analysis</span>
+      <div class="chart-info reveal reveal-delay-1">
+        <h3>Eight Dimensions of AI Engineering</h3>
+        <p>This curriculum was designed to give engineers solid grounding across the full spectrum of Claude API usage — not just one niche. Participants leave capable of making informed decisions in each area.</p>
+        <ul class="topic-list">
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-violet)"></div>API Integration — raw SDK usage, tool-call loops, streaming</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-violet)"></div>Evaluation — test suites, graders, benchmark harnesses</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-teal)"></div>Inference Optimization — model selection, cost modeling, caching</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-teal)"></div>Context Engineering — rot mitigation, long-context strategies</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-teal)"></div>Agentic Design — multi-agent orchestration, diagnosis</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-violet)"></div>Full-Stack Development — Vue 3 + FastAPI with Claude Code</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-violet)"></div>Prompt Engineering — systematic debugging and eval-driven fixing</li>
+          <li class="topic-item"><div class="topic-dot" style="background:var(--c-teal)"></div>Claude Code — agents, hooks, MCP, commands</li>
+        </ul>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Day 2 -->
-  <div class="day-block">
-    <div class="day-header">
-      <span class="day-badge day2">Day 2</span>
-      <h3>Advanced — Optimization & Production Agents</h3>
+<!-- ═══════════════════════════════════════
+     TECH STACK
+════════════════════════════════════════ -->
+<div class="sessions-bg" id="stack">
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Technology</div>
+      <h2 class="section-title">Tech Stack</h2>
+      <p class="section-sub">Four languages, multiple frameworks, and a deep Claude Code integration — reflecting the diversity of real production AI environments.</p>
+
+      <div class="stack-grid">
+        <div>
+          <div class="stack-col">
+            <h3><span>🖥️</span> Frontend</h3>
+            <div class="skill-row reveal">
+              <div class="skill-meta"><span class="skill-name">Vue 3 — Composition API</span><span class="skill-pct">Primary framework</span></div>
+              <div class="skill-track"><div class="skill-bar bar-violet" data-width="92"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1">
+              <div class="skill-meta"><span class="skill-name">Vite 5</span><span class="skill-pct">Build tooling</span></div>
+              <div class="skill-track"><div class="skill-bar bar-violet" data-width="80"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-2">
+              <div class="skill-meta"><span class="skill-name">Axios + Custom i18n (EN/JA)</span><span class="skill-pct">HTTP + l10n</span></div>
+              <div class="skill-track"><div class="skill-bar bar-violet" data-width="70"></div></div>
+            </div>
+            <div class="tag-cloud reveal reveal-delay-3">
+              <span class="tech-tag">Composition API</span><span class="tech-tag">Reactive state</span>
+              <span class="tech-tag">Scoped CSS</span><span class="tech-tag">Component slots</span>
+              <span class="tech-tag">Composables</span><span class="tech-tag">Vite HMR</span>
+            </div>
+          </div>
+
+          <br /><br />
+
+          <div class="stack-col">
+            <h3><span>⚙️</span> Backend</h3>
+            <div class="skill-row reveal">
+              <div class="skill-meta"><span class="skill-name">FastAPI 0.110+</span><span class="skill-pct">Primary framework</span></div>
+              <div class="skill-track"><div class="skill-bar bar-teal" data-width="88"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1">
+              <div class="skill-meta"><span class="skill-name">Pydantic 2.5+ — Data validation</span><span class="skill-pct">Models & schemas</span></div>
+              <div class="skill-track"><div class="skill-bar bar-teal" data-width="78"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-2">
+              <div class="skill-meta"><span class="skill-name">pytest + httpx — Test suite</span><span class="skill-pct">3 test modules</span></div>
+              <div class="skill-track"><div class="skill-bar bar-teal" data-width="65"></div></div>
+            </div>
+            <div class="tag-cloud reveal reveal-delay-3">
+              <span class="tech-tag">Uvicorn ASGI</span><span class="tech-tag">CORS middleware</span>
+              <span class="tech-tag">Mock data layer</span><span class="tech-tag">Async endpoints</span>
+              <span class="tech-tag">uv package manager</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="stack-col">
+            <h3><span>🧠</span> AI & Notebooks</h3>
+            <div class="skill-row reveal">
+              <div class="skill-meta"><span class="skill-name">Anthropic Python SDK</span><span class="skill-pct">Core integration</span></div>
+              <div class="skill-track"><div class="skill-bar bar-amber" data-width="95"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1">
+              <div class="skill-meta"><span class="skill-name">Jupyter Notebooks (7)</span><span class="skill-pct">Interactive exercises</span></div>
+              <div class="skill-track"><div class="skill-bar bar-amber" data-width="85"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-2">
+              <div class="skill-meta"><span class="skill-name">pandas + numpy</span><span class="skill-pct">Benchmarking & analysis</span></div>
+              <div class="skill-track"><div class="skill-bar bar-amber" data-width="60"></div></div>
+            </div>
+            <div class="tag-cloud reveal reveal-delay-3">
+              <span class="tech-tag">claude-haiku-4-5</span><span class="tech-tag">claude-sonnet-4-6</span>
+              <span class="tech-tag">claude-opus-4-7</span><span class="tech-tag">Tool use</span>
+              <span class="tech-tag">Streaming</span><span class="tech-tag">Prompt caching</span>
+              <span class="tech-tag">GitHub Codespaces</span>
+            </div>
+          </div>
+
+          <br /><br />
+
+          <div class="stack-col">
+            <h3><span>🔧</span> Claude Code Config</h3>
+            <div class="skill-row reveal">
+              <div class="skill-meta"><span class="skill-name">Custom Agents (3)</span><span class="skill-pct">vue-expert · reviewer · security</span></div>
+              <div class="skill-track"><div class="skill-bar bar-green" data-width="90"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1">
+              <div class="skill-meta"><span class="skill-name">MCP Server + Hooks</span><span class="skill-pct">Post-tool-use automation</span></div>
+              <div class="skill-track"><div class="skill-bar bar-green" data-width="75"></div></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-2">
+              <div class="skill-meta"><span class="skill-name">Slash Commands + Skills</span><span class="skill-pct">start · stop · test · deploy</span></div>
+              <div class="skill-track"><div class="skill-bar bar-green" data-width="65"></div></div>
+            </div>
+            <div class="tag-cloud reveal reveal-delay-3">
+              <span class="tech-tag">CLAUDE.md</span><span class="tech-tag">.claude/agents/</span>
+              <span class="tech-tag">.claude/commands/</span><span class="tech-tag">.claude/hooks/</span>
+              <span class="tech-tag">.mcp.json</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="exercise-list">
-      <div class="exercise">
-        <div class="exercise-num">01</div>
-        <div class="exercise-body">
-          <h4>Building Evals — Test Suites for AI Agents</h4>
-          <p>Learn to define task sets, write graders (exact match, LLM-as-judge, regex), and build an eval harness that runs Claude against a benchmark to produce quality scores for iterative improvement.</p>
-        </div>
-        <span class="exercise-type type-notebook">Notebook</span>
-      </div>
-      <div class="exercise">
-        <div class="exercise-num">02</div>
-        <div class="exercise-body">
-          <h4>Inference Optimization — Model Benchmarking</h4>
-          <p>Side-by-side benchmark of Haiku, Sonnet, and Opus on TTFT, TTC, output tokens/sec, and cost. Also measures prompt caching impact. Produces a data-driven model selection framework.</p>
-        </div>
-        <span class="exercise-type type-notebook">Notebook</span>
-      </div>
-      <div class="exercise">
-        <div class="exercise-num">03</div>
-        <div class="exercise-body">
-          <h4>Context Engineering — Fighting Context Rot</h4>
-          <p>Replicates Chroma's "context rot" research with needle-in-haystack tests and word faithfulness benchmarks. Compares Claude vs GPT-4.1 baselines and teaches mitigation strategies.</p>
-        </div>
-        <span class="exercise-type type-notebook">Notebook</span>
-      </div>
-      <div class="exercise">
-        <div class="exercise-num">04</div>
-        <div class="exercise-body">
-          <h4>Agent Build Hackathon — RFP Response Agent</h4>
-          <p>Capstone challenge: design and implement a production-grade RFP parsing and response generation agent with knowledge-base retrieval. Facilitator dry-run scripts and expected outputs included.</p>
-        </div>
-        <span class="exercise-type type-hackathon">Hackathon</span>
-      </div>
-    </div>
-  </div>
+  </section>
 </div>
 
-<!-- Tech Stack -->
-<div class="container section" id="stack">
-  <div class="section-label">Technology</div>
-  <div class="section-title">Tech Stack</div>
-  <p class="section-sub">The repository spans four languages and multiple frameworks — reflecting real-world AI engineering environments.</p>
+<!-- ═══════════════════════════════════════
+     FILE STRUCTURE
+════════════════════════════════════════ -->
+<section class="section" id="structure">
+  <div class="container">
+    <div class="section-label">Repository Layout</div>
+    <h2 class="section-title">File Structure</h2>
+    <p class="section-sub">The inventory management app is the largest component at 36 files. All notebook exercises are self-contained within their session directory.</p>
 
-  <div class="tech-grid">
-    <div class="tech-card">
-      <h4>Frontend</h4>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Vue 3 (Composition API)</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Vite 5 (build tool)</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Axios (HTTP client)</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Custom i18n (EN/JA)</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Scoped CSS design system</div>
-    </div>
-    <div class="tech-card">
-      <h4>Backend</h4>
-      <div class="tech-item"><div class="tech-dot dot-teal"></div>Python 3.11+</div>
-      <div class="tech-item"><div class="tech-dot dot-teal"></div>FastAPI 0.110+</div>
-      <div class="tech-item"><div class="tech-dot dot-teal"></div>Uvicorn (ASGI server)</div>
-      <div class="tech-item"><div class="tech-dot dot-teal"></div>Pydantic 2.5+</div>
-      <div class="tech-item"><div class="tech-dot dot-teal"></div>pytest + httpx</div>
-    </div>
-    <div class="tech-card">
-      <h4>AI / Notebooks</h4>
-      <div class="tech-item"><div class="tech-dot dot-orange"></div>Anthropic Python SDK</div>
-      <div class="tech-item"><div class="tech-dot dot-orange"></div>Claude API (Haiku/Sonnet/Opus)</div>
-      <div class="tech-item"><div class="tech-dot dot-orange"></div>Jupyter Notebooks</div>
-      <div class="tech-item"><div class="tech-dot dot-orange"></div>pandas + numpy</div>
-      <div class="tech-item"><div class="tech-dot dot-orange"></div>GitHub Codespaces ready</div>
-    </div>
-    <div class="tech-card">
-      <h4>Claude Code Config</h4>
-      <div class="tech-item"><div class="tech-dot dot-green"></div>Custom agents (3)</div>
-      <div class="tech-item"><div class="tech-dot dot-green"></div>Slash commands</div>
-      <div class="tech-item"><div class="tech-dot dot-green"></div>Post-tool-use hooks</div>
-      <div class="tech-item"><div class="tech-dot dot-green"></div>MCP server config</div>
-      <div class="tech-item"><div class="tech-dot dot-green"></div>CLAUDE.md guidelines</div>
-    </div>
-    <div class="tech-card">
-      <h4>Config & Data</h4>
-      <div class="tech-item"><div class="tech-dot dot-yellow"></div>JSON mock datasets (7)</div>
-      <div class="tech-item"><div class="tech-dot dot-yellow"></div>TOML (pyproject)</div>
-      <div class="tech-item"><div class="tech-dot dot-yellow"></div>YAML (pytest.ini)</div>
-      <div class="tech-item"><div class="tech-dot dot-yellow"></div>uv (dependency manager)</div>
-      <div class="tech-item"><div class="tech-dot dot-yellow"></div>.env / dotenv</div>
-    </div>
-    <div class="tech-card">
-      <h4>Inventory App Features</h4>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Dashboard KPIs</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Warehouse inventory tracking</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Order management</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Demand forecasting</div>
-      <div class="tech-item"><div class="tech-dot dot-purple"></div>Spending analytics</div>
-    </div>
-  </div>
-</div>
-
-<!-- Structure -->
-<div class="container section" id="structure">
-  <div class="section-label">Repository Layout</div>
-  <div class="section-title">File Structure</div>
-  <p class="section-sub">Top-level layout of the repository. The inventory management app is the largest component; notebook exercises are self-contained per session.</p>
-
-  <div class="tree">
-<span class="tree-dir">Basecamp-Exercises/</span>
-├── <span class="tree-dir">day1/</span>
-│   ├── <span class="tree-dir">01_inventory-management/</span>  <span class="tree-note">← Full-stack demo app (36 files)</span>
-│   │   ├── <span class="tree-dir">client/</span>              <span class="tree-note">Vue 3 frontend (16 components)</span>
-│   │   ├── <span class="tree-dir">server/</span>              <span class="tree-note">FastAPI backend + 7 JSON datasets</span>
-│   │   ├── <span class="tree-dir">tests/</span>               <span class="tree-note">pytest suite (3 test modules)</span>
-│   │   └── <span class="tree-dir">.claude/</span>             <span class="tree-note">Agents, commands, hooks, MCP config</span>
-│   ├── <span class="tree-dir">02_developer-platform/</span>   <span class="tree-note">← Agentic loop notebook + script</span>
-│   ├── <span class="tree-dir">03_prompt-rescue/</span>        <span class="tree-note">← Prompt eval notebook + harness</span>
-│   └── <span class="tree-dir">04_diagnosing-ai-problems/</span><span class="tree-note">← PDF brief, system prompts, traces</span>
-├── <span class="tree-dir">day2/</span>
-│   ├── <span class="tree-dir">01_evals/</span>                <span class="tree-note">← Eval suite notebook + harness</span>
-│   ├── <span class="tree-dir">02_inference-optimization/</span><span class="tree-note">← Benchmarking notebook</span>
-│   ├── <span class="tree-dir">03_context-engineering/</span>  <span class="tree-note">← Context rot research notebook</span>
-│   └── <span class="tree-dir">04_agent-build-hackathon/</span> <span class="tree-note">← RFP agent challenge</span>
-└── <span class="tree-file">README.md</span>                    <span class="tree-note">Session index + setup instructions</span>
-  </div>
-</div>
-
-<!-- Setup -->
-<div class="container section" id="setup">
-  <div class="section-label">Getting Started</div>
-  <div class="section-title">Setup Instructions</div>
-  <p class="section-sub">Three ways to run these exercises — choose the one that fits your environment.</p>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div>
-        <h4>Clone the Repository</h4>
-        <p>Download the materials to your local machine or open in GitHub Codespaces.</p>
-        <div class="code-block">git clone &lt;repo-url&gt;
-cd Basecamp-Exercises</div>
+    <div class="tree-wrap reveal">
+      <div class="tree-titlebar">
+        <div class="tree-dot" style="background:#ff5f57"></div>
+        <div class="tree-dot" style="background:#ffbd2e"></div>
+        <div class="tree-dot" style="background:#28c840"></div>
+        <span class="tree-name">~/Basecamp-Exercises</span>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div>
-        <h4>Set Your Anthropic API Key</h4>
-        <p>Required for all notebook exercises and Claude API interactions.</p>
-        <div class="code-block">export ANTHROPIC_API_KEY=sk-ant-...</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3a</div>
-      <div>
-        <h4>Run the Inventory Management App</h4>
-        <p>Start both frontend and backend servers with one command (macOS/Linux).</p>
-        <div class="code-block"># Option A — one command
-./scripts/start.sh
-
-# Option B — manually
-cd day1/01_inventory-management/client && npm install && npm run dev
-cd day1/01_inventory-management/server && uv venv && uv sync && uv run python main.py</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3b</div>
-      <div>
-        <h4>Open a Notebook Exercise</h4>
-        <p>Notebook exercises run in Codespaces, VS Code, or local Jupyter. Open the <code>.ipynb</code> file and run cells with Shift+Enter.</p>
-        <div class="code-block">cd day1/02_developer-platform
-jupyter notebook  # or open in VS Code</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div>
-        <h4>Run the Test Suite</h4>
-        <p>Verify the backend is working correctly with the pytest suite.</p>
-        <div class="code-block">cd day1/01_inventory-management/tests
-uv run pytest backend/ -v</div>
+      <div class="tree-body">
+        <div class="tr"><span class="tr-dir">Basecamp-Exercises/</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">├── </span><span class="tr-dir">day1/</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">01_inventory-management/</span><span class="tr-note">← Full-stack demo app (36 files)</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   │   ├── </span><span class="tr-dir">client/</span><span class="tr-note">Vue 3 — 16 components, i18n, composables</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   │   ├── </span><span class="tr-dir">server/</span><span class="tr-note">FastAPI + 7 JSON mock datasets</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   │   ├── </span><span class="tr-dir">tests/</span><span class="tr-note">pytest suite — 3 test modules</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   │   └── </span><span class="tr-dir">.claude/</span><span class="tr-note">Agents, commands, hooks, MCP config, skills</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">02_developer-platform/</span><span class="tr-note">← Claude API agentic loop notebook + script</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">03_prompt-rescue/</span><span class="tr-note">← Prompt eval notebook + harness</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   └── </span><span class="tr-dir">04_diagnosing-ai-problems/</span><span class="tr-note">← PDF, system prompts, tool schemas, traces</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">├── </span><span class="tr-dir">day2/</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">01_evals/</span><span class="tr-note">← Eval suite notebook + harness</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">02_inference-optimization/</span><span class="tr-note">← Haiku/Sonnet/Opus benchmark notebook</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   ├── </span><span class="tr-dir">03_context-engineering/</span><span class="tr-note">← Context rot research notebook</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">│   └── </span><span class="tr-dir">04_agent-build-hackathon/</span><span class="tr-note">← RFP agent challenge + dry-run scripts</span></div>
+        <div class="tr"><span style="color:var(--c-text3)">└── </span><span class="tr-file">README.md</span><span class="tr-note">Session index, download instructions, API key setup</span></div>
       </div>
     </div>
   </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SETUP
+════════════════════════════════════════ -->
+<div class="sessions-bg" id="setup">
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Getting Started</div>
+      <h2 class="section-title">Setup in minutes</h2>
+      <p class="section-sub">Three execution paths supported — GitHub Codespaces, VS Code, or local. All exercises require an Anthropic API key.</p>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Clone the Repository</h4>
+            <p>Download the materials or open directly in GitHub Codespaces — no local install required for notebook exercises.</p>
+            <div class="code-block"><span class="cb-comment"># Clone locally</span>
+<span class="cb-cmd">git clone &lt;repo-url&gt; && cd Basecamp-Exercises</span>
+
+<span class="cb-comment"># Or open in GitHub Codespaces — click "Code → Open with Codespaces"</span></div>
+          </div>
+        </div>
+
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Set Your Anthropic API Key</h4>
+            <p>Required for all notebook exercises and Claude API calls. Add to your shell profile for persistence.</p>
+            <div class="code-block"><span class="cb-comment"># Temporary (current session)</span>
+<span class="cb-cmd">export ANTHROPIC_API_KEY=sk-ant-...</span>
+
+<span class="cb-comment"># Or add to ~/.zshrc / ~/.bashrc for persistence</span></div>
+          </div>
+        </div>
+
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-num">3A</div>
+          <div class="step-body">
+            <h4>Run the Inventory Management App</h4>
+            <p>Start both the Vue 3 frontend (port 3000) and FastAPI backend (port 8001) with a single script, or bring them up individually.</p>
+            <div class="code-block"><span class="cb-comment"># One-command startup (macOS/Linux)</span>
+<span class="cb-cmd">./scripts/start.sh</span>
+
+<span class="cb-comment"># Manual — frontend</span>
+<span class="cb-cmd">cd client && npm install && npm run dev</span>
+
+<span class="cb-comment"># Manual — backend</span>
+<span class="cb-cmd">cd server && uv venv && uv sync && uv run python main.py</span></div>
+          </div>
+        </div>
+
+        <div class="step-card reveal reveal-delay-3">
+          <div class="step-num">3B</div>
+          <div class="step-body">
+            <h4>Open a Notebook Exercise</h4>
+            <p>Navigate to any session directory and open the <code style="font-family:'DM Mono',monospace;color:var(--c-teal);font-size:12px">.ipynb</code> file. Run cells sequentially with <kbd style="background:var(--c-surface3);border:1px solid var(--c-border);padding:1px 6px;border-radius:4px;font-size:12px">Shift+Enter</kbd>.</p>
+            <div class="code-block"><span class="cb-comment"># Example — Day 1 developer platform exercise</span>
+<span class="cb-cmd">cd day1/02_developer-platform</span>
+<span class="cb-cmd">jupyter notebook  </span><span class="cb-comment"># or open in VS Code</span></div>
+          </div>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Run the Test Suite</h4>
+            <p>Verify the backend is healthy. All three test modules should pass in under a second.</p>
+            <div class="code-block"><span class="cb-cmd">cd day1/01_inventory-management/tests</span>
+<span class="cb-cmd">uv run pytest backend/ -v</span>
+
+<span style="color:var(--c-green)">PASSED</span> <span class="cb-comment">test_inventory.py · test_orders.py · test_api.py</span>
+<span style="color:var(--c-green)">✓ 3 passed in 0.42s</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
-<!-- Footer -->
+<!-- ═══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
 <footer>
-  <strong>Basecamp Exercises</strong> — Anthropic Partner Training Materials &nbsp;·&nbsp;
-  Vue 3 + FastAPI + Claude API &nbsp;·&nbsp;
-  <span style="color: var(--accent)">8 exercises across 2 days</span>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo-mark">B</div>
+      Basecamp Exercises
+    </div>
+    <div class="footer-meta">Anthropic Partner Training Materials &nbsp;·&nbsp; Vue 3 + FastAPI + Claude API</div>
+    <div class="footer-links">
+      <a href="#overview">Overview</a>
+      <a href="#sessions">Sessions</a>
+      <a href="#stack">Stack</a>
+      <a href="#setup">Setup</a>
+    </div>
+  </div>
 </footer>
+
+<!-- ─────────────────────────────────────────
+     JAVASCRIPT
+───────────────────────────────────────── -->
+<script>
+  /* ── Scroll progress bar ── */
+  const bar = document.getElementById('progress-bar');
+  function updateProgress() {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    bar.style.width = (scrolled / total * 100) + '%';
+  }
+
+  /* ── Nav scroll state ── */
+  const nav = document.getElementById('main-nav');
+  function updateNav() {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }
+
+  /* ── Active nav link ── */
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  function updateActiveLink() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    updateProgress();
+    updateNav();
+    updateActiveLink();
+  }, { passive: true });
+
+  updateNav();
+
+  /* ── Scroll reveal ── */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ── Stat counter animation ── */
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count, 10);
+    const duration = 1400;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // Ease out quart
+      const eased = 1 - Math.pow(1 - progress, 4);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCount(e.target);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+  /* ── Skill bars ── */
+  const barObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.dataset.width;
+        e.target.style.width = w + '%';
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.skill-bar').forEach(el => barObs.observe(el));
+
+  /* ── Card tilt micro-interaction ── */
+  document.querySelectorAll('.glass-card, .bento-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `translateY(-4px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+</script>
 
 </body>
 </html>
